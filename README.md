@@ -4,7 +4,7 @@
 Small physics engine wrote on c# with Imgui!
 
 # 📋 Features:
-+ 3D render
++ 3D render (OpenTK)
 + [ImGui](https://github.com/ImGuiNET/ImGui.NET)
 + [Physics](https://github.com/ValtoLibraries/BulletSharp)
 + FOV
@@ -16,3 +16,12 @@ Small physics engine wrote on c# with Imgui!
 + [BulletSharp](https://github.com/ValtoLibraries/BulletSharp)
 + [OpenTK](https://opentk.net/)
 + [ImGui.NET](https://github.com/ImGuiNET/ImGui.NET)
+
+# ⚙️ Developers:
+
++ [mncrzz](https://github.com/mncrzz)
++ [undefined](https://github.com/PrIzRaKDev)
+
+# 📞 Feedback:
+
++ *See [issues](https://github.com/mncrzz/Tiny3D/issues)*

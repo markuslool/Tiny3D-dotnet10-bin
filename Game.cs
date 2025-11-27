@@ -22,7 +22,7 @@ namespace opentk_learn
 
         private float frameTime = 0.0f;
         private int fps = 0;
-        private int indDisplayList = 0;
+        private readonly int indDisplayList = 0;
         private float rotationAngleX = 0.0f;
         private float rotationAngleY = 0.0f;
         private float rotationAngleZ = 0.0f;
@@ -31,7 +31,7 @@ namespace opentk_learn
         private bool isWireframe = false;
         private bool physicsEnabled = false;
         private int groundDisplayList = 0;
-        private bool _isPlaying = false;
+        private readonly bool _isPlaying = false;
 
         public Game(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -71,11 +71,11 @@ namespace opentk_learn
             camera.Start();
             cubePhysics.Start();
             skybox.Start();
-            ui.Start();
+            UI.Start();
 
             cubePhysics.SetPosition(new Vector3(0, 3, 0));
             groundDisplayList = objects.CreateGround();
-            camera.SetupProjection(fov, Size.X, Size.Y);
+            FreeCamera.SetupProjection(fov, Size.X, Size.Y);
 
             ImguiImplOpenTK4.Init(this);
             ImguiImplOpenGL3.Init();
@@ -85,7 +85,7 @@ namespace opentk_learn
         {
             base.OnResize(e);
             GL.Viewport(0, 0, e.Width, e.Height);
-            camera.SetupProjection(fov, Size.X, Size.Y);
+            FreeCamera.SetupProjection(fov, Size.X, Size.Y);
             var io = ImGui.GetIO();
             io.DisplaySize = new System.Numerics.Vector2(e.Width, e.Height);
         }
@@ -104,7 +104,7 @@ namespace opentk_learn
 
             if (physicsEnabled)
             {
-                cubePhysics.Update((float)args.Time, objects.floorLevel);
+                cubePhysics.Update((float)args.Time);
                 if (cubePhysics.LinearVelocity.Length < 0.1f && cubePhysics.Position.Y <= -1.3f)
                 {
                     cubePhysics.WakeUp();
@@ -178,15 +178,12 @@ namespace opentk_learn
             }
 
             GL.PolygonMode(MaterialFace.FrontAndBack, isWireframe ? PolygonMode.Line : PolygonMode.Fill);
-            objects.CreateCube(0.0f, 0.0f, 0.0f);
+            Objects.CreateCube(0.0f, 0.0f, 0.0f);
 
-            if (editorUI != null)
-            {
-                editorUI.Draw(displayedFps, ref isWireframe, ref fov, this, ref physicsEnabled, cubePhysics,
+            editorUI?.Draw(displayedFps, ref isWireframe, ref fov, this, ref physicsEnabled, cubePhysics,
                              Vector3.Zero,
-                             () => camera.SetupProjection(fov, Size.X, Size.Y),
+                             () => FreeCamera.SetupProjection(fov, Size.X, Size.Y),
                              ref rotationAngleX, ref rotationAngleY, ref rotationAngleZ);
-            }
 
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
@@ -204,7 +201,7 @@ namespace opentk_learn
 
         public readonly static DebugProc DebugProcCallback = Window_DebugProc;
 
-        public void OnClosed()
+        public static void OnClosed()
         {
             ImguiImplOpenGL3.Shutdown();
             ImguiImplOpenTK4.Shutdown();

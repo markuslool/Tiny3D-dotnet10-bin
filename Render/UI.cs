@@ -1,11 +1,10 @@
-﻿using Dear_ImGui_Sample.Backends;
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace Tiny3DEngine
 {
     public class UI
     {
-        public void Start()
+        public static void Start()
         {
             ImGui.CreateContext();
             ImGuiIOPtr io = ImGui.GetIO();
@@ -15,7 +14,7 @@ namespace Tiny3DEngine
             SetupImGuiStyle();
         }
 
-        public void SetupImGuiStyle()
+        public static void SetupImGuiStyle()
         {
             var style = ImGui.GetStyle();
             var colors = style.Colors;

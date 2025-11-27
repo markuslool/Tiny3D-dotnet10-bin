@@ -7,11 +7,11 @@ namespace Tiny3DEngine
     {
         public float floorLevel = -2.0f;
 
-        public int CreateDisplayList()
+        public static int CreateDisplayList()
         {
             int index = GL.GenLists(1);
             GL.NewList(index, ListMode.Compile);
-            this.CreateCube(0.0f, 0.0f, 0.0f);
+            CreateCube(0.0f, 0.0f, 0.0f);
             GL.EndList();
             return index;
         }
@@ -38,32 +38,32 @@ namespace Tiny3DEngine
             return displayList;
         }
 
-        public void CreateCube(float x, float y, float z)
+        public static void CreateCube(float x, float y, float z)
         {
-            Vector3[] vertices = {
-                new Vector3(-0.5f + x, -0.5f + y,  0.5f + z),
-                new Vector3( 0.5f + x, -0.5f + y,  0.5f + z),
-                new Vector3( 0.5f + x,  0.5f + y,  0.5f + z),
-                new Vector3(-0.5f + x,  0.5f + y,  0.5f + z),
-                new Vector3(-0.5f + x, -0.5f + y, -0.5f + z),
-                new Vector3( 0.5f + x, -0.5f + y, -0.5f + z),
-                new Vector3( 0.5f + x,  0.5f + y, -0.5f + z),
-                new Vector3(-0.5f + x,  0.5f + y, -0.5f + z)
-            };
+            Vector3[] vertices = [
+                new(-0.5f + x, -0.5f + y,  0.5f + z),
+                new( 0.5f + x, -0.5f + y,  0.5f + z),
+                new( 0.5f + x,  0.5f + y,  0.5f + z),
+                new(-0.5f + x,  0.5f + y,  0.5f + z),
+                new(-0.5f + x, -0.5f + y, -0.5f + z),
+                new( 0.5f + x, -0.5f + y, -0.5f + z),
+                new( 0.5f + x,  0.5f + y, -0.5f + z),
+                new(-0.5f + x,  0.5f + y, -0.5f + z)
+            ];
 
-            int[][] faces = {
-                new int[] {0, 1, 2, 3},
-                new int[] {1, 5, 6, 2},
-                new int[] {5, 4, 7, 6},
-                new int[] {4, 0, 3, 7},
-                new int[] {3, 2, 6, 7},
-                new int[] {4, 5, 1, 0}
-            };
+            int[][] faces = [
+                [0, 1, 2, 3],
+                [1, 5, 6, 2],
+                [5, 4, 7, 6],
+                [4, 0, 3, 7],
+                [3, 2, 6, 7],
+                [4, 5, 1, 0]
+            ];
 
-            Color4[] colors = {
+            Color4[] colors = [
                 Color4.Red, Color4.Green, Color4.Blue,
                 Color4.Yellow, Color4.Magenta, Color4.Cyan
-            };
+            ];
 
             for (int i = 0; i < 6; i++)
             {
@@ -79,7 +79,7 @@ namespace Tiny3DEngine
             }
         }
 
-        public Vector3 GetCubeMapTexCoord(int face, int vertex)
+        public static Vector3 GetCubeMapTexCoord(int face, int vertex)
         {
             Vector3[,] coords = {
                 { new Vector3(1, -1, 1), new Vector3(1, -1, -1), new Vector3(1, 1, -1), new Vector3(1, 1, 1) },
