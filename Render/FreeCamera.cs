@@ -2,7 +2,9 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Graphics.OpenGL;
 
+#pragma warning disable IDE0130
 namespace Tiny3DEngine
+#pragma warning restore IDE0130 
 {
     public class FreeCamera
     {
@@ -36,7 +38,7 @@ namespace Tiny3DEngine
             return Matrix4.LookAt(Position, Position + Front, Up);
         }
 
-        public void SetupProjection(float fov, float x, float y)
+        public static void SetupProjection(float fov, float x, float y)
         {
             GL.MatrixMode(MatrixMode.Projection);
             Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(
@@ -69,44 +71,38 @@ namespace Tiny3DEngine
 
         public void Update(MouseState mouseState, KeyboardState keyboardState, float deltaTime)
         {
-            if (cameraActive)
+            if (!cameraActive)
+                return;
+
+            const float baseSpeed = 5f;
+            const float sprintMultiplier = 2f;
+            MovementSpeed = baseSpeed * (keyboardState.IsKeyDown(Keys.LeftShift) ? sprintMultiplier : 1f);
+
+            Vector3 move = Vector3.Zero;
+            if (keyboardState.IsKeyDown(Keys.W)) move.Z += 1f;
+            if (keyboardState.IsKeyDown(Keys.S)) move.Z -= 1f;
+            if (keyboardState.IsKeyDown(Keys.A)) move.X -= 1f;
+            if (keyboardState.IsKeyDown(Keys.D)) move.X += 1f;
+            if (keyboardState.IsKeyDown(Keys.Q)) move.Y -= 1f;
+            if (keyboardState.IsKeyDown(Keys.E)) move.Y += 1f;
+
+            if (move != Vector3.Zero)
             {
-                Vector3 moveDirection = Vector3.Zero;
+                move = Vector3.Normalize(move);
+                ProcessKeyboard(move, deltaTime);
+            }
 
-                if (keyboardState.IsKeyDown(Keys.W))
-                    moveDirection += new Vector3(0, 0, 1);
-                if (keyboardState.IsKeyDown(Keys.S))
-                    moveDirection += new Vector3(0, 0, -1);
-                if (keyboardState.IsKeyDown(Keys.A))
-                    moveDirection += new Vector3(-1, 0, 0);
-                if (keyboardState.IsKeyDown(Keys.D))
-                    moveDirection += new Vector3(1, 0, 0);
-                if (keyboardState.IsKeyDown(Keys.Q))
-                    moveDirection += new Vector3(0, -1, 0);
-                if (keyboardState.IsKeyDown(Keys.E))
-                    moveDirection += new Vector3(0, 1, 0);
-
-                float speedMultiplier = keyboardState.IsKeyDown(Keys.LeftShift) ? 2.0f : 1.0f;
-                MovementSpeed = 5.0f * speedMultiplier;
-
-                if (moveDirection != Vector3.Zero)
-                {
-                    ProcessKeyboard(moveDirection, deltaTime);
-                }
-
-                if (firstMove)
-                {
-                    lastMousePos = new Vector2(mouseState.X, mouseState.Y);
-                    firstMove = false;
-                }
-                else
-                {
-                    float deltaX = mouseState.X - lastMousePos.X;
-                    float deltaY = mouseState.Y - lastMousePos.Y;
-                    lastMousePos = new Vector2(mouseState.X, mouseState.Y);
-
-                    ProcessMouseMovement(deltaX, deltaY);
-                }
+            var currentMouse = new Vector2(mouseState.X, mouseState.Y);
+            if (firstMove)
+            {
+                lastMousePos = currentMouse;
+                firstMove = false;
+            }
+            else
+            {
+                var delta = currentMouse - lastMousePos;
+                lastMousePos = currentMouse;
+                ProcessMouseMovement(delta.X, delta.Y);
             }
         }
 

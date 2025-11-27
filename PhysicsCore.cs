@@ -1,25 +1,24 @@
 ﻿using OpenTK.Mathematics;
 using BulletSharp;
-using System.Runtime.InteropServices;
 
 namespace Tiny3DEngine
 {
     public class CubePhysics : IDisposable
     {
-        private Vector3 _position = new Vector3(0, 3, 0);
+        private Vector3 _position = new(0, 3, 0);
         private Quaternion _rotation = Quaternion.Identity;
         private Vector3 _linearVelocity = Vector3.Zero;
         private Vector3 _angularVelocity = Vector3.Zero;
-        private DiscreteDynamicsWorld _dynamicsWorld;
-        private RigidBody _cubeRigidBody;
-        private RigidBody _groundRigidBody;
-        private CollisionShape _cubeCollisionShape;
-        private CollisionShape _groundCollisionShape;
-        private DefaultCollisionConfiguration _collisionConfig;
-        private CollisionDispatcher _dispatcher;
-        private DbvtBroadphase _broadphase;
-        private SequentialImpulseConstraintSolver _solver;
-        private float cubeHalfSize = 0.5f;
+        private DiscreteDynamicsWorld? _dynamicsWorld;
+        private RigidBody? _cubeRigidBody;
+        private RigidBody? _groundRigidBody;
+        private CollisionShape? _cubeCollisionShape;
+        private CollisionShape? _groundCollisionShape;
+        private DefaultCollisionConfiguration? _collisionConfig;
+        private CollisionDispatcher? _dispatcher;
+        private DbvtBroadphase? _broadphase;
+        private SequentialImpulseConstraintSolver? _solver;
+        private readonly float cubeHalfSize = 0.5f;
         public bool IsGrounded { get; private set; }
         private bool _disposed = false;
 
@@ -40,8 +39,10 @@ namespace Tiny3DEngine
             _broadphase = new DbvtBroadphase();
             _solver = new SequentialImpulseConstraintSolver();
 
-            _dynamicsWorld = new DiscreteDynamicsWorld(_dispatcher, _broadphase, _solver, _collisionConfig);
-            _dynamicsWorld.Gravity = new BulletSharp.Math.Vector3(0, -9.81f, 0);
+            _dynamicsWorld = new DiscreteDynamicsWorld(_dispatcher, _broadphase, _solver, _collisionConfig)
+            {
+                Gravity = new BulletSharp.Math.Vector3(0, -9.81f, 0)
+            };
 
             _cubeCollisionShape = new BoxShape(cubeHalfSize, cubeHalfSize, cubeHalfSize);
 
@@ -50,10 +51,12 @@ namespace Tiny3DEngine
             var cubeInertia = _cubeCollisionShape.CalculateLocalInertia(1.0f);
             var cubeConstructionInfo = new RigidBodyConstructionInfo(1.0f, cubeMotionState, _cubeCollisionShape, cubeInertia);
 
-            _cubeRigidBody = new RigidBody(cubeConstructionInfo);
-            _cubeRigidBody.Restitution = 0.6f;
-            _cubeRigidBody.Friction = 0.5f;
-            _cubeRigidBody.RollingFriction = 0.1f;
+            _cubeRigidBody = new RigidBody(cubeConstructionInfo)
+            {
+                Restitution = 0.6f,
+                Friction = 0.5f,
+                RollingFriction = 0.1f
+            };
 
             _dynamicsWorld.AddRigidBody(_cubeRigidBody);
             CreateGround();
@@ -64,13 +67,15 @@ namespace Tiny3DEngine
             _groundCollisionShape = new StaticPlaneShape(new BulletSharp.Math.Vector3(0, 1, 0), -2.0f);
             var groundMotionState = new DefaultMotionState();
             var groundConstructionInfo = new RigidBodyConstructionInfo(0, groundMotionState, _groundCollisionShape);
-            _groundRigidBody = new RigidBody(groundConstructionInfo);
-            _groundRigidBody.Restitution = 0.4f;
-            _groundRigidBody.Friction = 0.6f;
+            _groundRigidBody = new RigidBody(groundConstructionInfo)
+            {
+                Restitution = 0.4f,
+                Friction = 0.6f
+            };
             _dynamicsWorld.AddRigidBody(_groundRigidBody);
         }
 
-        public void Update(float deltaTime, float groundLevel)
+        public void Update(float deltaTime)
         {
             _dynamicsWorld.StepSimulation(deltaTime);
             _cubeRigidBody.MotionState.GetWorldTransform(out var transform);
@@ -86,7 +91,7 @@ namespace Tiny3DEngine
             CheckGrounded();
         }
 
-        private Quaternion MatrixToQuaternion(BulletSharp.Math.Matrix matrix)
+        private static Quaternion MatrixToQuaternion(BulletSharp.Math.Matrix matrix)
         {
             float trace = matrix.M11 + matrix.M22 + matrix.M33;
 
@@ -160,13 +165,13 @@ namespace Tiny3DEngine
 
         public void AddRandomImpulse()
         {
-            Random rand = new Random();
-            Vector3 linearImpulse = new Vector3(
+            Random rand = new();
+            Vector3 linearImpulse = new(
                 (float)(rand.NextDouble() - 0.5) * 3f,
                 5f + (float)rand.NextDouble() * 3f,
                 (float)(rand.NextDouble() - 0.5) * 3f
             );
-            Vector3 angularImpulse = new Vector3(
+            Vector3 angularImpulse = new(
                 (float)(rand.NextDouble() - 0.5) * 1f,
                 (float)(rand.NextDouble() - 0.5) * 1f,
                 (float)(rand.NextDouble() - 0.5) * 1f

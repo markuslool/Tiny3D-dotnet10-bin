@@ -9,7 +9,7 @@ namespace Tiny3DEngine
         private int skyboxDisplayList = 0;
         public bool showSkybox = true;
         private int skyboxTexture = 0;
-        private Objects objects = new Objects();
+        private readonly Objects objects = new();
 
         public void Start()
         {
@@ -40,25 +40,25 @@ namespace Tiny3DEngine
             }
         }
 
-        private int LoadSkyboxTextures()
+        private static int LoadSkyboxTextures()
         {
-            string[] faces = {
+            string[] faces = [
                 "skybox/right.png",
                 "skybox/left.png",
                 "skybox/top.png",
                 "skybox/bottom.png",
                 "skybox/front.png",
                 "skybox/back.png"
-            };
+            ];
 
             int textureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.TextureCubeMap, textureID);
 
-            TextureTarget[] targets = {
+            TextureTarget[] targets = [
                 TextureTarget.TextureCubeMapPositiveX, TextureTarget.TextureCubeMapNegativeX,
                 TextureTarget.TextureCubeMapPositiveY, TextureTarget.TextureCubeMapNegativeY,
                 TextureTarget.TextureCubeMapPositiveZ, TextureTarget.TextureCubeMapNegativeZ
-            };
+            ];
 
             for (int i = 0; i < 6; i++)
             {
@@ -104,14 +104,14 @@ namespace Tiny3DEngine
             GL.NewList(displayList, ListMode.Compile);
 
             float size = 10.0f;
-            Vector3[] vertices = {
+            Vector3[] vertices = [
                 new Vector3(-size, -size, size), new Vector3(size, -size, size), new Vector3(size, size, size), new Vector3(-size, size, size),
                 new Vector3(-size, -size, -size), new Vector3(-size, size, -size), new Vector3(size, size, -size), new Vector3(size, -size, -size),
                 new Vector3(-size, size, -size), new Vector3(-size, size, size), new Vector3(size, size, size), new Vector3(size, size, -size),
                 new Vector3(-size, -size, -size), new Vector3(size, -size, -size), new Vector3(size, -size, size), new Vector3(-size, -size, size),
                 new Vector3(size, -size, -size), new Vector3(size, size, -size), new Vector3(size, size, size), new Vector3(size, -size, size),
                 new Vector3(-size, -size, -size), new Vector3(-size, -size, size), new Vector3(-size, size, size), new Vector3(-size, size, -size)
-            };
+            ];
 
             GL.Enable(EnableCap.TextureCubeMap);
             GL.BindTexture(TextureTarget.TextureCubeMap, skyboxTexture);
@@ -121,7 +121,7 @@ namespace Tiny3DEngine
                 GL.Begin(PrimitiveType.Quads);
                 for (int j = 0; j < 4; j++)
                 {
-                    Vector3 texCoord = objects.GetCubeMapTexCoord(i, j);
+                    Vector3 texCoord = Objects.GetCubeMapTexCoord(i, j);
                     GL.TexCoord3(texCoord);
                     GL.Vertex3(vertices[i * 4 + j]);
                 }

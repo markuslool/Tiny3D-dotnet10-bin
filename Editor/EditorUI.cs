@@ -1,8 +1,5 @@
 ﻿using ImGuiNET;
 using Tiny3DEngine;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Mathematics;
 
 namespace opentk_learn.Editor
