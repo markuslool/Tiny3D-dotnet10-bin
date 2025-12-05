@@ -6,22 +6,19 @@ Small physics engine wrote on c# with Imgui!
 # 📋 Features:
 + 3D render (OpenTK)
 + [ImGui](https://github.com/ImGuiNET/ImGui.NET)
-+ [Physics](https://github.com/ValtoLibraries/BulletSharp)
++ [Physics](https://github.com/AndresTraks/BulletSharp)
 + FOV
 + [Skybox](https://tools.wwwtyro.net/space-3d/index.html)
 + Wireframe
 + Impulses
 
 # 💼 Libraries:
-+ [BulletSharp](https://github.com/ValtoLibraries/BulletSharp)
++ [BulletSharp.NetCore](https://github.com/AndresTraks/BulletSharp)
 + [OpenTK](https://opentk.net/)
 + [ImGui.NET](https://github.com/ImGuiNET/ImGui.NET)
 
 # ⚙️ Developers:
 
 + [mncrzz](https://github.com/mncrzz)
++ [markuslool](https://github.com/markuslool)
 + [undefined](https://github.com/PrIzRaKDev)
-
-# 📞 Feedback:
-
-+ *See [issues](https://github.com/mncrzz/Tiny3D/issues)*
